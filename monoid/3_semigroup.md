@@ -3,15 +3,15 @@
 事实上，Monoid是从Semigroup派生而来的。**Semigroup**（半群）相对于Monoid少了单位元，它只要求满足结合律，从代码上看则只定义了mappend运算。
 ```scala
 scala> trait Semigroup[A] {
-     |    def mappend(a: A, b: A): A
-     | }
+        def mappend(a: A, b: A): A
+     }
 defined trait Semigroup
 ```
 于是，Monoid可重新定义为：
 ```scala
 scala> trait Monoid[A] extends Semigroup[A] {
-     |    def mzero(a: A):A
-     | }
+        def mzero(a: A):A
+     }
 defined trait Monoid
 ```
 可见，当我们为类型A定义了Monoid，将同时获赠一个Semigroup，Semigroup是Monoid的副产品。对于输入类型为Semigroup的函数，我们可以直接传入Monoid。
