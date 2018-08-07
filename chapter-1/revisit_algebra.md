@@ -37,9 +37,9 @@ scala> object IntMonoid {
        }
 defined object IntMonoid
 ```
-Int类型规定了研究的是整数集合，mappend方法定义了"+"运算，mzero字牌了单位元。
+Int类型规定了研究的是整数集合，mappend方法定义了"+"运算，mzero定义了单位元。
 
-后面我们将接触更多Monoid的代码表示，探索它们在编程中的应用。
+可见，Monoid是对加法（或者说所有描述如何"结合"的运算）的抽象。这种抽象极其简单，又在编程中随处可见，字符串、列表、foldable数据类型、甚至并发编程中的future，响应式编程中的事件，等等。后面我们将接触更多Monoid抽象，探索它们在编程中的应用。
 
 你能想出其它Monoid吗？试着用代码来定义它们吧。
 
