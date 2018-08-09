@@ -1,10 +1,7 @@
 # 什么是Functor
 
-Functor从名字上就给人和Function很像的映像。它们也确实很像，Functor是对上下文环境内运算的抽象，可以通俗地理解为穿了外套的Function。Functor对环境内的值做映射，如：
-```scala
-scala> List(1, 2, 3).map {_ * 2}
-res1: List[Int] = List(2, 4, 6)
-```
+Functor从名字上就给人和Function很像的映像。它们也确实很像，
+Functor描述高阶类型之间的映射。
 
 除了List，常见的上下文还有：
 
@@ -28,5 +25,6 @@ scala> trait Functor[F[_]] { self =>
      }
 defined trait Functor
 ```
+是对上下文环境内运算的抽象，可以通俗地理解为穿了外套的Function。Functor对环境内的值做映射，
 
 其中，F代表了上下文环境，里面装了某种数据类型，我们并不关心它是什么类型，只是简单地定义了map方法，接受一个把A变成B的函数，便能把装着A的环境变成装着B的环境。

@@ -7,4 +7,5 @@
     * [Monoid的副产品](monoid/3_semigroup.md)
     * [Monoid的应用](monoid/4_monoid_usage.md)
 * [Functor](functor/README.md)
-    * [什么是Functor](functor/1_what_is_functor.md)
+    * [重温函数和类型](functor/1_revisit_function.md)
+    * [什么是Functor](functor/2_what_is_functor.md)
