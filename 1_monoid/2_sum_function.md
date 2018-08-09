@@ -70,9 +70,9 @@ res4: Int = 6
 另一种方式是使用context bound：
 ```scala
 scala> def sum[A: Monoid](xs: List[A]): A = {
-     |   val m = implicitly[Monoid[A]]
-     |   xs.foldLeft(m.mzero)(m.mappend)
-     | }
+        val m = implicitly[Monoid[A]]
+        xs.foldLeft(m.mzero)(m.mappend)
+      }
 sum: [A](xs: List[A])(implicit evidence$1: Monoid[A])A
 
 scala> sum(List(1, 2, 3))
