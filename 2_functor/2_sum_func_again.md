@@ -7,9 +7,9 @@
 前面我们定义了sum函数，能对任何具备Monoid特征的类型求和：
 ```scala
 scala> def sum[A: Monoid](l: List[A]): A = {
-     |   val m = implicitly[Monoid[A]]
-     |   l.foldLeft(m.mzero)(m.mappend)
-     | }
+        val m = implicitly[Monoid[A]]
+        l.foldLeft(m.mzero)(m.mappend)
+      }
 sum: [A](l: List[A])(implicit evidence$1: Monoid[A])A
 
 scala> sum(List("a", "b", "c"))
