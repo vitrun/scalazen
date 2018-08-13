@@ -10,4 +10,5 @@
     * [重温函数和类型](2_functor/1_revisit_function.md)
     * [再谈求和函数](2_functor/2_sum_func_again.md)
     * [什么是Functor](2_functor/3_what_is_functor.md)
-    * [Functor的意义](2_functor/4_functor_point.md)
+    * [自己变成自己](2_functor/4_endofunctor.md)
+    * [Functor的意义](2_functor/5_functor_point.md)
