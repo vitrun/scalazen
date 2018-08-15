@@ -12,3 +12,5 @@
     * [什么是Functor](2_functor/3_what_is_functor.md)
     * [自己变成自己](2_functor/4_endofunctor.md)
     * [Functor的意义](2_functor/5_functor_point.md)
+* [Monad](3_monad/README.md)
+    * [容器里的函数](3_monad/1_applicative.md)
