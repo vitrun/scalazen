@@ -4,4 +4,6 @@
 * http://hongjiang.info/scala-higher-kinded-type/
 * https://stackoverflow.com/questions/6246719/what-is-a-higher-kinded-type-in-scala%23
 * https://typelevel.org/cats/typeclasses/functor.html
+* https://en.wikipedia.org/wiki/Domain_of_a_function
+* https://math.stackexchange.com/questions/238077/isnt-every-endofunctor-an-identity-functor
 * scala with cats
