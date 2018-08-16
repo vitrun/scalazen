@@ -6,4 +6,5 @@
 * https://typelevel.org/cats/typeclasses/functor.html
 * https://en.wikipedia.org/wiki/Domain_of_a_function
 * https://math.stackexchange.com/questions/238077/isnt-every-endofunctor-an-identity-functor
+* https://hackernoon.com/functors-and-applicatives-b9af535b1440
 * scala with cats
