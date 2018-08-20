@@ -25,9 +25,9 @@ def associativeLaw[A](x: A, y: A, z: A)(implicit m: Monoid[A]): Boolean  = m.map
 def identityLaw[A](x: A)(implicit m: Monoid[A]): Boolean = (m.append(x, m.mzero) == x) && (m.append(m.mzero, x) == x)
 ```
 
-眼尖的读者会问，只是定义了mappend和mzero而已，怎么就说分别对应了结合律和单位元呢？ 相当不错的问题，答案是不保证，或者说，这是你的职责，如果你声称某个类为Monoid时，你必须保证它满足上述定律。也只有它真的是个Monoid时，你才能享受到数学上严谨推导带来的好处。
+眼尖的读者会问，只是定义了mappend和mzero而已，怎么就说分别对应了结合律和单位元呢？ 相当不错的问题，答案是不保证，或者说，这是你的职责，如果你声称某个类为Monoid时，你必须保证它满足上述法则。也只有它真的是个Monoid时，你才能享受到数学上严谨推导带来的好处。
 
-从实践的角度看，当我们定义Monoid时，应主动检查声明的mappend是否满足associativeLaw， mzero是否满足identityLaw。如下面是对Set类型定义的Monoid，请读者分析是否满足这两个定律。
+从实践的角度看，当我们定义Monoid时，应主动检查声明的mappend是否满足associativeLaw， mzero是否满足identityLaw。如下面是对Set类型定义的Monoid，请读者分析是否满足这两个法则。
 
 ```scala
 scala> import scala.language.higherKinds
