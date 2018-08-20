@@ -46,6 +46,12 @@ scala官方库中并没有一个Monad类，但它已然随处可见。List、Set
 * 右单位元法则： m.flatMap(unit) == m
 * 结合性法则： m.flatMap(f).flatMap(g) == m.flatMap(x => f(x).flatMap(g))
 
+Applicative是比Functor更强的概念，有更多约束，Functor的map可以用Applicative的apply表示；相应地，Monad是比Applicative还要强的概念，其约束进一步增加，Applicative的apply可以用Monad的flatMap表示：
+```scala
+def apply[A, B](fab: F[A => B])(fa: F[A]): F[B] = flatMap(fab)(f => map(fa)(f))
+```
+用一句伪代码表示这一递进的关系：Monad extends Applicative extends Functor。
+
 #### 触发链式反应
 Functor可以无限组合，多个map串联起来形成调用链，但因为Functor的map接受的是A => A函数，前后类型必须保持一致，使得其应用场景受到很大限制。Monad打破了这一限制，能够触发真正的链式反应。
 
