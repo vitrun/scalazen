@@ -75,12 +75,12 @@ X是一个A => B类型的函数； Y是A类型的入参；g通过对A执行A=>B�
 
 综合起来，可以发现：
 * Applicative是在Apply基础上添加unit。Applicative和Apply的关系类似于Monoid和Semigroup的关系。
-* apply和map2是等价的，二者可以相互表示，所以实际使用时，定义一可即可。
+* apply和map2是等价的，二者可以相互表示，所以实际使用时，定义一个即可。
 * 更有意思的是，Functor的标志性方法map也可以用apply推导而来：
 ```scala
 def map[A, B](fa: F[A])(fab: A => B): F[B] = apply(fa)(unit(fab))
 ```
 所以，Applicative天然是个Functor，可以从Functor拓展而来。
 
-Applicative比常规Functor更厉害的地方在于，它知道如何在容器环境中执行装在同样容器里的函数。比如，给定一个Option[Int]容器，它知道如何对它执行Option[Int => Int]，而常规Functor里的map只具备执行Int => Int的能力。正是由于这个额外的能力，Applicative能够把多个Functor融合在一起，归并成一个Functor。
+有两个角度理解Applicative比常规Functor更厉害的地方。首先，Applicative知道如何在容器环境中执行装在同样容器里的函数。比如，给定一个Option[Int]容器，它知道如何对它执行Option[Int => Int]，而常规Functor里的map只具备执行Int => Int的能力。另一个角度是，Applicative能执行多参数的函数，而常规Functor只能执行单参数函数。正是由于这个额外的能力，Applicative能把多个Functor融合在一起，归并成一个总的Functor。
 ![functor](../imgs/connect.png)
