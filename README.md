@@ -1,2 +1,1 @@
-# scalazen
-scalaz 学习录
+# 函数式，从代码到架构

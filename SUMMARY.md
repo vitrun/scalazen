@@ -1,5 +1,6 @@
 # 目录
 
+* 函数式，从代码到架构
 * [前言](README.md)
 * [Monoid](1_monoid/README.md)
     * [重温代数运算](1_monoid/1_revisit_algebra.md)
