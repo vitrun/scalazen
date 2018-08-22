@@ -16,3 +16,4 @@
 * [Monad](3_monad/README.md)
     * [容器里的函数](3_monad/1_applicative.md)
     * [触发链式反应](3_monad/2_monad.md)
+    * [尺有所短寸有所长](3_monad/3_app_vs_monad.md)

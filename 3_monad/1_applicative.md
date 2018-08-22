@@ -1,5 +1,7 @@
 # 容器里的函数
 
+> 这人总想把自己包在壳子里，仿佛要为自己制造一个套子，好隔绝人世，不受外界影响。 ——《装在套子里的人》
+
 介绍Functor时说到，类型构造器F可以理解为容器，发挥下想象力，这个容器既然可以装类型，能不能装函数呢？显然可以，比如下面的ff：
 ```scala
 scala> val ff: Option[Int=>String] = Some(x=>x.toString + " stars")
@@ -82,5 +84,4 @@ def map[A, B](fa: F[A])(fab: A => B): F[B] = apply(fa)(unit(fab))
 ```
 所以，Applicative天然是个Functor，可以从Functor拓展而来。
 
-有两个角度理解Applicative比常规Functor更厉害的地方。首先，Applicative知道如何在容器环境中执行装在同样容器里的函数。比如，给定一个Option[Int]容器，它知道如何对它执行Option[Int => Int]，而常规Functor里的map只具备执行Int => Int的能力。另一个角度是，Applicative能执行多参数的函数，而常规Functor只能执行单参数函数。正是由于这个额外的能力，Applicative能把多个Functor融合在一起，归并成一个总的Functor。
-![functor](../imgs/connect.png)
+有两个角度理解Applicative比常规Functor更厉害的地方。首先，Applicative知道如何在容器环境中执行装在同样容器里的函数。比如，给定一个Option[Int]容器，它知道如何对它执行Option[Int => Int]，而常规Functor里的map只具备执行Int => Int的能力。另一个角度是，Applicative能执行多参数的函数，而常规Functor只能执行单参数函数。

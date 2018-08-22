@@ -1,15 +1,15 @@
 # 触发链式反应
 
+> 链反应（或连锁反应、链式反应，Chain reaction）是指反应的产物或副产物又可作为其他反应的原料，从而使反应反复发生。——维基百科
+
+
 #### 熟悉又陌生的Monad
-对于map方法可接受的函数，我们已经接触了Functor中的常规函数A => A，以及Applicative中装在容器里的函数：F[A => A]。所以，当出现A => F[A]时，大概你不会感到奇怪。再次，为了区别，把接受A => F[A]的map称为flatMap，对应的特殊Functor称为Monad：
+对于map方法可接受的函数，我们已经接触了Functor中的常规函数A => B，以及Applicative中装在容器里的函数：F[A => B]。所以，当出现A => F[B]时，大概你不会感到奇怪。再次，为了区别，把接受A => F[B]的map称为flatMap，对应的特殊Functor称为Monad：
 ```scala
 scala> trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B] = flatten(map(fa)(f))
-
   def flatten[A](ffa: F[F[A]]): F[A]
-
   def unit[A](a: A): F[A]
-
   def map[A, B](fa: F[A])(f: A => B): F[B] = flatMap(unit(map(fa)(f)))
 }
 ```
@@ -18,7 +18,7 @@ scala> trait Monad[F[_]] {
                        用A => F[B]做map                   flatten
             F[A]  ------------------------->  F[F[B]]  -----------> F[B]
 ```
-注意flatMap并不要求A => F[A]，而是更灵活的A => F[B]，Int => List[String]、Int => Optional[OwnClass]等等，如：
+如：
 ```scala
 scala> val f = (i: Int) => Some((i + 1) + " stars")
 scala> Some(3).flatMap(f)
