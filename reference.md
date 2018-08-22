@@ -10,4 +10,5 @@
 * https://en.wikipedia.org/wiki/Monad_(functional_programming)
 * https://medium.com/@sinisalouc/demystifying-the-monad-in-scala-cc716bb6f534
 * http://www.danishin.com/article/Applicative_vs_Monad_In_Scala
+* https://stackoverflow.com/questions/19880207/when-and-why-should-one-use-applicative-functors-in-scala/19881777#19881777
 * scala with cats
