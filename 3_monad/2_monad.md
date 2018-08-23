@@ -10,8 +10,9 @@ scala> trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B] = flatten(map(fa)(f))
   def flatten[A](ffa: F[F[A]]): F[A]
   def unit[A](a: A): F[A]
-  def map[A, B](fa: F[A])(f: A => B): F[B] = flatMap(unit(map(fa)(f)))
+  def map[A, B](fa: F[A])(f: A => B): F[B]
 }
+defined trait Monad
 ```
 经过map后得到F[F[B]]，套了两层容器，经过*flatten*压扁之后，得到只剩下一层容器的F[B]。
 ```text
@@ -30,6 +31,7 @@ scala> trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
   def unit[A](a: A): F[A]
 }
+defined trait Monad
 ```
 map可以用flatMap表示：
 ```scala
@@ -76,6 +78,7 @@ def getComment(blog: Blog): Option[Comment] = Some(new Comment {})
 val comment = getUser("hello@world.com")
   .flatMap(getBlog)
   .flatMap(getComment)
+res0: Option[Comment] = Some($anon$1@78ffe38)
 ```
 Monad优雅地解决了中间结果的不确定性问题。操作的结果可能是合法值，也可能是非法值或抛出异常，当要把多个这样的操作连在一起调用时，必须判断每个函数的结果是否合法，只有合法的情况下才能继续调用下一个操作，程序员只需要关注正确的路径，发生异常时自动返回到最外层。想象一下，如果不用Monad，难免要写一堆if-else判断，检查option容器是否为空。固然也是可行的，但牺牲了可阅读性和可维护性。
 
@@ -90,5 +93,6 @@ scala> val result: Option[Comment] = for (
     blog <- getBlog(user);
     comment <- getComment(blog)
   ) yield(comment)
+result: Option[Comment] = Some($anon$1@6faeb7dc)
 ```
 
