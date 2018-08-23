@@ -62,5 +62,5 @@ idMonad: Monad[scalaz.Scalaz.Id] = $anon$1@4f1ee0c6
 scala> idMonad.flatMap(1){_ * 2}
 res6: scalaz.Scalaz.Id[Int] = 2
 ```
-在和不在容器内，貌似区别很大，却达成了和谐统一，似有似无，颇有几分神游太虚的感觉。
+在和不在容器内，貌似区别很大，却达成了和谐统一，似有似无，颇有几分神游太虚的感觉。当然，这种大一统并不是Monad独享的，Applicative和普通Functor都支持，具体就留给读者探索吧。
 
