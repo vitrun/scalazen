@@ -82,8 +82,6 @@ res5: Int = 6
 scala寻找隐含参数的范围还包括companion对象，所以还可以把隐含值定义在companion对象内，为了方便阅读，把完整代码贴出来：
 ```scala
 scala> :paste
-// Entering paste mode (ctrl-D to finish)
-
 trait Monoid[A] {
     def mappend(a: A, b: A): A
     def mzero: A
@@ -100,8 +98,6 @@ def sum[A: Monoid](xs: List[A]): A =  {
     val m = implicitly[Monoid[A]]
     xs.foldLeft(m.mzero)(m.mappend)
 }
-
-
 // Exiting paste mode, now interpreting.
 
 defined trait Monoid

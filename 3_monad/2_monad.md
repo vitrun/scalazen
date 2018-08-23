@@ -19,7 +19,7 @@ defined trait Monad
                        用A => F[B]做map                   flatten
             F[A]  ------------------------->  F[F[B]]  -----------> F[B]
 ```
-如：
+Option就是一个Monad：
 ```scala
 scala> val f = (i: Int) => Some((i + 1) + " stars")
 scala> Some(3).flatMap(f)
