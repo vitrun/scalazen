@@ -19,3 +19,5 @@
     * [开枝散叶](3_monad/3_tree_monad.md)
     * [云游太虚幻境](3_monad/4_identity.md)
     * [尺有所短寸有所长](3_monad/5_app_vs_monad.md)
+* [Traverse](4_traverse/README.md)
+    * [大丈夫能屈能伸](4_traverse/1_foldable.md)
