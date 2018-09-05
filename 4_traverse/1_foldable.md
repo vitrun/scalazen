@@ -32,3 +32,4 @@ def map[A, B](l: List[A])(f: A => B): List[B] = l.foldRight(List[B]()) {
         (item, acc) => f(item) :: acc
     }
 ```
+你能用foldLeft实现列表的逆序操作吗？

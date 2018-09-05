@@ -21,3 +21,4 @@
     * [尺有所短寸有所长](3_monad/5_app_vs_monad.md)
 * [Traverse](4_traverse/README.md)
     * [大丈夫能屈能伸](4_traverse/1_foldable.md)
+    * [穿越火线](4_traverse/2_traverse.md)
