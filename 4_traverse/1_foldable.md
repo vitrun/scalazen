@@ -26,3 +26,9 @@ scala> List(1, 2, 3).foldRight(0)(_ - _)
 res1: Int = 2
 ```
 常见的可遍历容器，如List、Set、Seq、Vector和Stream都是可折叠的。
+"折叠"这个字眼，直观上给人把整个列表压缩成一个值的印象，如对包含多个整数的列表做加法的折叠操作，得到的是一个整数。但折叠也可以操作结构不变，原来有多少元素，折叠后依然有多少元素。甚至可以用折叠操作推导出保持结构的函数map、filter和flatMap等，如：
+```scala
+def map[A, B](l: List[A])(f: A => B): List[B] = l.foldRight(List[B]()) {
+        (item, acc) => f(item) :: acc
+    }
+```
