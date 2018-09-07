@@ -11,4 +11,6 @@
 * https://medium.com/@sinisalouc/demystifying-the-monad-in-scala-cc716bb6f534
 * http://www.danishin.com/article/Applicative_vs_Monad_In_Scala
 * https://stackoverflow.com/questions/19880207/when-and-why-should-one-use-applicative-functors-in-scala/19881777#19881777
+* http://www.danishin.com/article/Foldable_vs_Traverse_In_Scala
 * scala with cats
+

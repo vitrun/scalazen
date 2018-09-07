@@ -52,9 +52,41 @@ val res3 = Vector(1, 2, 3).foldLeft(Some(Vector()): Option[Vector[String]])((acc
   } yield acc :+ star
 })
 ```
-对比两个例子，不难发现，大部分都是模板化的代码，不同点仅是合并函数**op**，但op的签名是一致的，当要把F[A]转换为G[F[B]]时，op都是A => G[B]。因此，我们可以把上述foldLeft段落再抽象成新的方法，称之为traverse：
+对比两个例子，不难发现，当要把F[A]转换为G[F[B]]时，大部分都是模板化的代码，不同点仅是：
+* 累积值不同，但形式一致，都是一个空的数据结构G[F[\_]]。
+* 合并函数不同，但签名一致，op都是A => G[B]。
+
+op函数应作为参数传入，因为它本来就是个性化的业务逻辑。因此，问题仅剩下如何为不同的G提供相同的实现。如何成功解决这点，我们可以再把上述foldLeft模板代码再抽象成新的方法。幸运的是，Applicative具备这个能力。回忆下前面对它的介绍：
+> Applicative是在Apply基础上添加unit。Applicative和Apply的关系类似于Monoid和Semigroup的关系。
+
+借用unit把"裸值"装进容器里的能力。不论F具体是什么类型，我们都能把一个空的F装到G里作为折叠操作的初始累积值。如此一来，合并函数则变成要合并两个装在G内的值，Applicative的apply2恰好又能派上用场了。这样，二次抽象终于可以进行了，当然，以我们一贯的做法，又要换个新的名字：Traverse。
+
 ```scala
 trait Traverse[F[_]] {
   def traverse[G[_], A, B](fa: F[A])(f: A => G[B]): G[F[B]]
+
+  def sequence[G[_], B](fgb: F[G[B]]): G[F[B]] = traverse(fgb)(identity)
 }
 ```
+其中，sequence依赖于traverse，作用很明显，完成一次"穿越"，保持元素不变的同时，把里面的F和外面的G换个位置。
+
+剩下的F我们暂时还无法提供统一的实现，但可以作个分类，相同性质的F归为一类，提供相同的Traverse实现，这里先按下不表。还是简单地以List为例，看看具体的Traverse实现：
+```scala
+scala> val listTraverse = new MyTraverse[List] {
+  override def traverse[G[_] : Applicative, A, B](fa: List[A])(f: A => G[B]) = {
+    val m = implicitly[Applicative[G]]
+    fa.foldLeft(m.pure(List.empty[B])) { (accum, item) => m.apply2(accum, f(item))(_ :+ _) }
+  }
+}
+listTraverse: MyTraverse[List] = $anon$1@5261d921
+
+scala> listTraverse.traverse(List(1, 2, 3))(x => Some(x): Option[Int])
+res1: Option[List[Int]] = Some(List(1, 2, 3))
+```
+隐式值m是为G创建Applicative的辅助工具，m的pure和apply2成为整体实现的核心。正如Monoid之于Foldable，Applicative之于Traversable（Traverse也称为Traversable）也有着重要意义。
+
+由此反观Monoid和Applicative，你是不是对它们有了更深的认识呢？它们都擅长于合并容器内的对象，但从append和apply2的定义可以看出，Monoid本身就知道合并的逻辑，而Applicative需要外部定义。
+
+也许你也发现了，随着讨论的深入，越来越多概念在不经意之间，发生了令人意外的关联。这是函数式思维学习过程的一大乐趣，概念之间并不是孤立的，而是连贯的、呼应的，成体系的。
+
+读者不防思考，我们从Foldable抽象出的Traverse，能否反过来表达Foldable呢？它和Functor是否也存在某种关系呢？
