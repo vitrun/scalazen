@@ -72,13 +72,13 @@ trait Traverse[F[_]] {
 
 剩下的F我们暂时还无法提供统一的实现，但可以作个分类，相同性质的F归为一类，提供相同的Traverse实现，这里先按下不表。还是简单地以List为例，看看具体的Traverse实现：
 ```scala
-scala> val listTraverse = new MyTraverse[List] {
+scala> val listTraverse = new Traverse[List] {
   override def traverse[G[_] : Applicative, A, B](fa: List[A])(f: A => G[B]) = {
     val m = implicitly[Applicative[G]]
     fa.foldLeft(m.pure(List.empty[B])) { (accum, item) => m.apply2(accum, f(item))(_ :+ _) }
   }
 }
-listTraverse: MyTraverse[List] = $anon$1@5261d921
+listTraverse: Traverse[List] = $anon$1@5261d921
 
 scala> listTraverse.traverse(List(1, 2, 3))(x => Some(x): Option[Int])
 res1: Option[List[Int]] = Some(List(1, 2, 3))
