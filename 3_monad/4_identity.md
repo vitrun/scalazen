@@ -45,7 +45,7 @@ Id虽然是类型别名，但它的容器地位已经得到承认。像List、Op
 ```scala
 scala> trait Monad[F[_]] {
          def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
-         def unit[A](a: A): F[A]
+         def pure[A](a: A): F[A]
        }
 defined trait Monad
 
@@ -53,7 +53,7 @@ val idMonad = new Monad[Id] {
   override def flatMap[A, B](a: Id[A])(func: A => Id[B]): Id[B] = func(a)
   //  如果也要重写map的话，将写成这样：
   //  override def map[A, B](a: Id[A])(func: A => B): Id[B] = func(a)
-  override def unit[A](a: A): Id[A] = a
+  override def pure[A](a: A): Id[A] = a
 }
 idMonad: Monad[scalaz.Scalaz.Id] = $anon$1@4f1ee0c6
 ```

@@ -15,13 +15,13 @@ import scala.language.higherKinds
 trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
 
-  def unit[A](a: A): F[A]
+  def pure[A](a: A): F[A]
 
-  def map[A, B](fa: F[A])(f: A => B): F[B] = flatMap(fa) { x => unit(f(x)) }
+  def map[A, B](fa: F[A])(f: A => B): F[B] = flatMap(fa) { x => pure(f(x)) }
 }
 
 implicit object treeMonad extends Monad[Tree] {
-  override def unit[A](value: A): Tree[A] = Leaf[A](value)
+  override def pure[A](value: A): Tree[A] = Leaf[A](value)
 
   override def flatMap[A, B](tree: Tree[A])(func: A => Tree[B]): Tree[B] = tree match {
     case Leaf(value) => func(value)

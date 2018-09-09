@@ -57,9 +57,9 @@ val res3 = Vector(1, 2, 3).foldLeft(Some(Vector()): Option[Vector[String]])((acc
 * 合并函数不同，但签名一致，op都是A => G[B]。
 
 op函数应作为参数传入，因为它本来就是个性化的业务逻辑。因此，问题仅剩下如何为不同的G提供相同的实现。如何成功解决这点，我们可以再把上述foldLeft模板代码再抽象成新的方法。幸运的是，Applicative具备这个能力。回忆下前面对它的介绍：
-> Applicative是在Apply基础上添加unit。Applicative和Apply的关系类似于Monoid和Semigroup的关系。
+> Applicative是在Apply基础上添加pure。Applicative和Apply的关系类似于Monoid和Semigroup的关系。
 
-借用unit把"裸值"装进容器里的能力。不论F具体是什么类型，我们都能把一个空的F装到G里作为折叠操作的初始累积值。如此一来，合并函数则变成要合并两个装在G内的值，Applicative的apply2恰好又能派上用场了。这样，二次抽象终于可以进行了，当然，以我们一贯的做法，又要换个新的名字：Traverse。
+借用pure把"裸值"装进容器里的能力。不论F具体是什么类型，我们都能把一个空的F装到G里作为折叠操作的初始累积值。如此一来，合并函数则变成要合并两个装在G内的值，Applicative的apply2恰好又能派上用场了。这样，二次抽象终于可以进行了，当然，以我们一贯的做法，又要换个新的名字：Traverse。
 
 ```scala
 trait Traverse[F[_]] {
@@ -84,6 +84,7 @@ scala> listTraverse.traverse(List(1, 2, 3))(x => Some(x): Option[Int])
 res1: Option[List[Int]] = Some(List(1, 2, 3))
 ```
 隐式值m是为G创建Applicative的辅助工具，m的pure和apply2成为整体实现的核心。正如Monoid之于Foldable，Applicative之于Traversable（Traverse也称为Traversable）也有着重要意义。
+
 
 由此反观Monoid和Applicative，你是不是对它们有了更深的认识呢？它们都擅长于合并容器内的对象，但从append和apply2的定义可以看出，Monoid本身就知道合并的逻辑，而Applicative需要外部定义。
 

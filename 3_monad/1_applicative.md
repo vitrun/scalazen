@@ -43,20 +43,20 @@ res1: Option[String] = Some(3 stars)
 ```scala
 scala> trait Applicative[F[_]] {
            def apply[A, B](fa: F[A])(f: F[A => B]): F[B]
-           def unit[A](a: A): F[A]
+           def pure[A](a: A): F[A]
        }
 defined trait Applicative
 ```
-这样一来，如果碰到"裸值"，先执行unit装进容器里，就能适配apply了。
+这样一来，如果碰到"裸值"，先执行pure装进容器里，就能适配apply了。
 
-针对问题二，如果我们能把两个参数的函数转变为一个参数的，就有理由相信可以支持任意多个参数。利用函数的克里化，这种转变并不复杂，下面两个参数的map2就可以用一个参数的apply来表示：
+针对问题二，如果我们能把两个参数的函数转变为一个参数的，就有理由相信可以支持任意多个参数。利用函数的克里化，这种转变并不复杂，下面两个参数的apply2就可以用一个参数的apply来表示：
 ```scala
 scala> trait Applicative[F[_]] {
     def apply[A, B](fa: F[A])(f: F[A => B]): F[B]
-    def unit[A](a: A): F[A]
-    def map2[A, B, C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] =  {
-        //返回A => B型的函数，或写成val fabc = unit(f.curried)
-        val fabc = unit({a: A => {b: B => f(a, b)}})
+    def pure[A](a: A): F[A]
+    def apply2[A, B, C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] =  {
+        //返回A => B型的函数，或写成val fabc = pure(f.curried)
+        val fabc = pure({a: A => {b: B => f(a, b)}})
         val fbc = apply(fa)(fabc)
         apply(fb)(fbc)
     }
@@ -67,7 +67,7 @@ defined trait Applicative
 以List为例，看一组实际应用：
 ```scala
 scala> object listApp extends Applicative[List] {
-  def unit[A](a: A): List[A] = List(a)
+  def pure[A](a: A): List[A] = List(a)
 
   override def apply[A, B](fa: List[A])(f: List[A => B]): List[B] = f match {
     case head:: tail => fa.map(head) ++ apply(fa)(tail)
@@ -76,32 +76,32 @@ scala> object listApp extends Applicative[List] {
 }
 defined object listApp
 
-scala> listApp.map2(List(1, 2), List(3, 4))((_, _))
+scala> listApp.apply2(List(1, 2), List(3, 4))((_, _))
 res2: List[(Int, Int)] = List((1,3), (1,4), (2,3), (2,4))
 
-scala> listApp.map2(List(1, 2), List(3, 4))(_ + _)
+scala> listApp.apply2(List(1, 2), List(3, 4))(_ + _)
 res3: List[Int] = List(4, 5, 5, 6)
 ```
-注意，map2计算结果的元素数量等于两个入参元素数量的乘积。其原因可以从map2和apply的实现中找到，map2执行第一次apply时得到的fb是部分施用的函数列表，长度和fa，即例子中的List(1, 2)一致，第二次apply时，则对fb中的每个元素执行该列表的每一个函数。
+注意，apply2计算结果的元素数量等于两个入参元素数量的乘积。其原因可以从apply2和apply的实现中找到，apply2执行第一次apply时得到的fb是部分施用的函数列表，长度和fa，即例子中的List(1, 2)一致，第二次apply时，则对fb中的每个元素执行该列表的每一个函数。
 
-上述过程中，map2通过apply推导而来，凭直觉，apply应该也得能map2表示，事实也确实如此：
+上述过程中，apply2通过apply推导而来，凭直觉，apply应该也得能apply2表示，事实也确实如此：
 ```scala
 scala> trait Applicative[F[_]] {
-           def map2[X, Y, Z](fx: F[X], fy: F[Y])(g: (X, Y)=> Z): F[Z]
-           def unit[A](a: A): F[A]
-           def apply[A, B](fa: F[A])(fab: F[A => B]): F[B] = map2(fab, fa)((f, x) => f(x))
+           def apply2[X, Y, Z](fx: F[X], fy: F[Y])(g: (X, Y)=> Z): F[Z]
+           def pure[A](a: A): F[A]
+           def apply[A, B](fa: F[A])(fab: F[A => B]): F[B] = apply2(fab, fa)((f, x) => f(x))
        }
 defined trait Applicative
 ```
-这里用到的字母比较多，map2用X, Y, Z，而不是A, B, C，只是为了便于解释说明apply方法。
-X是一个A => B类型的函数； Y是A类型的入参；g通过对A执行A=>B得到B，所以Z的类型就是B，说明map2和apply的返回类型是一致的。
+这里用到的字母比较多，apply2用X, Y, Z，而不是A, B, C，只是为了便于解释说明apply方法。
+X是一个A => B类型的函数； Y是A类型的入参；g通过对A执行A=>B得到B，所以Z的类型就是B，说明apply2和apply的返回类型是一致的。
 
 综合起来，可以发现：
-* Applicative是在Apply基础上添加unit。Applicative和Apply的关系类似于Monoid和Semigroup的关系。
-* apply和map2是等价的，二者可以相互表示，所以实际使用时，定义一个即可。
+* Applicative是在Apply基础上添加pure。Applicative和Apply的关系类似于Monoid和Semigroup的关系。
+* apply和apply2是等价的，二者可以相互表示，所以实际使用时，定义一个即可。
 * 更有意思的是，Functor的标志性方法map也可以用apply推导而来：
 ```scala
-def map[A, B](fa: F[A])(fab: A => B): F[B] = apply(fa)(unit(fab))
+def map[A, B](fa: F[A])(fab: A => B): F[B] = apply(fa)(pure(fab))
 ```
 所以，Applicative天然是个Functor，可以从Functor拓展而来。
 
