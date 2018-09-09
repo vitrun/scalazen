@@ -63,9 +63,9 @@ op函数应作为参数传入，因为它本来就是个性化的业务逻辑。
 
 ```scala
 trait Traverse[F[_]] {
-  def traverse[G[_], A, B](fa: F[A])(f: A => G[B]): G[F[B]]
+  def traverse[G[_]: Applicative, A, B](fa: F[A])(f: A => G[B]): G[F[B]]
 
-  def sequence[G[_], B](fgb: F[G[B]]): G[F[B]] = traverse(fgb)(identity)
+  def sequence[G[_]: Applicative, B](fgb: F[G[B]]): G[F[B]] = traverse(fgb)(identity)
 }
 ```
 其中，sequence依赖于traverse，作用很明显，完成一次"穿越"，保持元素不变的同时，把里面的F和外面的G换个位置。
@@ -82,9 +82,11 @@ listTraverse: Traverse[List] = $anon$1@5261d921
 
 scala> listTraverse.traverse(List(1, 2, 3))(x => Some(x): Option[Int])
 res1: Option[List[Int]] = Some(List(1, 2, 3))
+
+scala> listTraverse.sequence(List(List(1, 2), List(3, 4)))
+res2: List[List[Int]] = List(List(1, 3), List(1, 4), List(2, 3), List(2, 4))
 ```
 隐式值m是为G创建Applicative的辅助工具，m的pure和apply2成为整体实现的核心。正如Monoid之于Foldable，Applicative之于Traversable（Traverse也称为Traversable）也有着重要意义。
-
 
 由此反观Monoid和Applicative，你是不是对它们有了更深的认识呢？它们都擅长于合并容器内的对象，但从append和apply2的定义可以看出，Monoid本身就知道合并的逻辑，而Applicative需要外部定义。
 
