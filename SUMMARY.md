@@ -22,3 +22,4 @@
 * [Traverse](4_traverse/README.md)
     * [大丈夫能屈能伸](4_traverse/1_foldable.md)
     * [穿越火线](4_traverse/2_traverse.md)
+    * [再次穿越火线](4_traverse/3_traverse_functor.md)

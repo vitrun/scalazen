@@ -21,7 +21,7 @@
   val allUsers: List[Future[User]] = userIds.map(getUser)
 ```
 
-List[Future[\_]]让Future的等待变得很麻烦，需要逐一操作，如果能转换成Future[List[\_]]就方便多了，直接整体等待即可。利用Foldable，达成这点并不困难，下面代码的users即是Future[List[User]]，可直接用这个最终的Future做阻塞，等待异步结果。
+List[Future[\_]]让Future的等待变得很麻烦，需要逐一操作，如果能转换成Future[List[\_]]就方便多了，直接整体等待即可。这也体现了函数式编程的一个理念，构建很多小而独立的模块，再把它们组合成更大的模块。利用Foldable，达成这点并不困难，下面代码的users即是Future[List[User]]，可直接用这个最终的Future做阻塞，等待异步结果。
 ```scala
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
@@ -68,7 +68,7 @@ trait Traverse[F[_]] {
   def sequence[G[_]: Applicative, B](fgb: F[G[B]]): G[F[B]] = traverse(fgb)(identity)
 }
 ```
-其中，sequence依赖于traverse，作用很明显，完成一次"穿越"，保持元素不变的同时，把里面的F和外面的G换个位置。
+其中，sequence是traverse的特例，其作用很明显，完成一次"穿越"，保持元素不变的同时，把里面的F和外面的G换个位置。当然，也可以反过来理解，traverse是sequence的泛化。
 
 剩下的F我们暂时还无法提供统一的实现，但可以作个分类，相同性质的F归为一类，提供相同的Traverse实现，这里先按下不表。还是简单地以List为例，看看具体的Traverse实现：
 ```scala
