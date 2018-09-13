@@ -5,7 +5,7 @@
 
 鉴于Foldable之常用，以及它对Traversable的铺垫意义，有必要花点篇幅来专门讲讲它。
 
-一个极简的Foldable可定义为：
+有多种方式定义Foldable，一个极简的组成为foldMap和foldRight，基于它可以推导出众多常用的方法。
 ```scala
 trait Foldable[F[_]] {
   def foldLeft[A, B](fa: F[A], z: B)(op: (B, A) => B): B
@@ -30,10 +30,11 @@ res1: Int = 2
 
 Foldable让Monoid有了更多发挥的空间。Foldable需要一个积累值（Accumulator）和一个二元函数将其和集合内的值按顺序结合起来。而Monoid是关于如何结合数值的，天然定义了这个二元函数和初始的累积值，所以在Monoid上定义Foldable是件非常轻松的事：
 ```scala
-def foldLeft[A](xs: List[A])(m: Monoid[A]): A = xs.foldLeft(m.zero)(m.append)
+def foldLeft[A](xs: List[A])(m: Monoid[A]): A = xs.foldLeft(m.zero)(m.combine)
 ```
 
-二者结合，产生很多有用的函数，如foldMap：游览可折叠结构，过程中先对元素进行map操作，再用Monoid的append结合map的结果。
+二者结合，产生很多有用的函数，如foldMap：游览可折叠结构，过程中先对元素进行map操作，再用Monoid的combine结合map的结果。如果这么解释还是有点抽象的话，foldMap有个热门的同义词mapReduce，想必你已经很熟悉了。给定一个类型A的集合，和A => B的函数，在已知如何合并B（比如，整数的加法）的情况下，可以算出一个汇总值，比如经典例子统计字符数。由于不限定运算的顺序，所以可以优化为并行计算。
+
 ```scala
 val listFoldable = new Foldable[List] {
     override def foldLeft[A, B](fa: List[A], z: B)(op: (B, A) => B): B = {
@@ -45,7 +46,7 @@ val listFoldable = new Foldable[List] {
     }
 
     override def foldMap[A, B](fa: List[A])(f: A => B)(implicit F: Monoid[B]): B = {
-      fa.foldLeft(F.zero) { (accum, item) => F.append(accum, f(item)) }
+      fa.foldLeft(F.zero) { (accum, item) => F.combine(accum, f(item)) }
     }
 }
 val stars = listFoldable.foldMap(List(1, 2, 3))(_ + " stars ")
@@ -59,3 +60,4 @@ def map[A, B](l: List[A])(f: A => B): List[B] = l.foldRight(List[B]()) {
 ```
 你能用foldLeft实现列表的逆序操作吗？
 
+还记得吗，Semigroup是弱化版的Monoid，相比之下少了zero，即不支持空的情况。相应地，如果基于Semigroup做折叠，也将要求是非空的数据结构。为了区分，称之为Foldable1（没错，这不是个好名字，姑且忍受下吧），其它方面和Foldable相同，就不再重复了。

@@ -11,7 +11,7 @@ res0: Int = 10
 
 再用前面定义的IntMonoid重写sum函数：
 ```scala
-scala> def sum(xs: List[Int]): Int = xs.foldLeft(IntMonoid.mzero)(IntMonoid.mappend)
+scala> def sum(xs: List[Int]): Int = xs.foldLeft(IntMonoid.zero)(IntMonoid.combine)
 sum: (xs: List[Int])Int
 
 scala> sum(List(1, 2, 3, 4))
@@ -22,21 +22,21 @@ res1: Int = 10
 
 ```scala
 scala> trait Monoid[A] {
-         def mappend(a1: A, a2: A): A
-         def mzero: A
+         def combine(a1: A, a2: A): A
+         def zero: A
        }
 defined trait Monoid
 ```
 于是，sum可以写成：
 ```scala
-scala> def sum[A](xs: List[A], m: Monoid[A]): A = xs.foldLeft(m.mzero)(m.mappend)
+scala> def sum[A](xs: List[A], m: Monoid[A]): A = xs.foldLeft(m.zero)(m.combine)
 sum: [A](xs: List[A], m: Monoid[A])A
 ```
-但是，不同类型（集合）对应的mappend和mzero并不相同，必须明确定义这两方法，才能支持sum函数。Int类型的上面已经定义过了，改成继承自一般性的Monoid：
+但是，不同类型（集合）对应的combine和zero并不相同，必须明确定义这两方法，才能支持sum函数。Int类型的上面已经定义过了，改成继承自一般性的Monoid：
 ```scala
 scala> object IntMonoid extends Monoid[Int] {
-         def mappend(a: Int, b: Int): Int = a + b
-         def mzero: Int = 0
+         def combine(a: Int, b: Int): Int = a + b
+         def zero: Int = 0
        }
 defined module IntMonoid
 
@@ -46,19 +46,19 @@ res2: Int = 6
 String类型的定义如下：
 ```scala
 scala> object StringMonoid extends Monoid[String] {
-        def mappend(a: String, b: String): String = a + b
-        def mzero: String = ""
+        def combine(a: String, b: String): String = a + b
+        def zero: String = ""
       }
 defined object StringMonoid
 
 scala> sum(List("a", "b", "c"), StringMonoid)
 res3: String = abc
 ```
-不难发现，只要定义了类型（集合）的mappend（运算）和mzero（单位元），该类型便自动具备了进行sum运算的能力。
+不难发现，只要定义了类型（集合）的combine（运算）和zero（单位元），该类型便自动具备了进行sum运算的能力。
 #### 使用隐含参数
 比较麻烦的是，每次都要手动传入Monoid的具体类型。使用scala的implicit parameter特性，可以省去此麻烦。
 ```scala
-scala> def sum[A](xs: List[A])(implicit m:Monoid[A]):A = xs.foldLeft(m.mzero)(m.mappend)
+scala> def sum[A](xs: List[A])(implicit m:Monoid[A]):A = xs.foldLeft(m.zero)(m.combine)
 sum: [A](xs: List[A])(implicit m: Monoid[A])A
 
 scala> implicit val intMonoid = IntMonoid
@@ -71,7 +71,7 @@ res4: Int = 6
 ```scala
 scala> def sum[A: Monoid](xs: List[A]): A = {
         val m = implicitly[Monoid[A]]
-        xs.foldLeft(m.mzero)(m.mappend)
+        xs.foldLeft(m.zero)(m.combine)
       }
 sum: [A](xs: List[A])(implicit evidence$1: Monoid[A])A
 
@@ -83,20 +83,20 @@ scala寻找隐含参数的范围还包括companion对象，所以还可以把隐
 ```scala
 scala> :paste
 trait Monoid[A] {
-    def mappend(a: A, b: A): A
-    def mzero: A
+    def combine(a: A, b: A): A
+    def zero: A
 }
 
 object Monoid {
     implicit val IntMonoid: Monoid[Int] = new Monoid[Int] {
-        def mappend(a: Int, b: Int): Int = a + b
-        def mzero = 0
+        def combine(a: Int, b: Int): Int = a + b
+        def zero = 0
     }
 }
 
 def sum[A: Monoid](xs: List[A]): A =  {
     val m = implicitly[Monoid[A]]
-    xs.foldLeft(m.mzero)(m.mappend)
+    xs.foldLeft(m.zero)(m.combine)
 }
 // Exiting paste mode, now interpreting.
 

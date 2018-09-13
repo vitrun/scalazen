@@ -16,7 +16,7 @@ Functor的map一定保持容器结构不变，而Foldable既可以保持，也�
 那么Foldable的标志性方法foldLeft和foldRight，是否可以用traverse推导而来呢？
 
 Foldable是对于给定的数据集合F[A]，和一个映射函数A => B，在B是Monoid的情况下，把该集合累积归并到单个B值；Traverse则是，对集合F[A]，和一个返回带某种"作用"（effect）的函数A => G[B]，在G是Applicative的情况下，组合所有"作用"。似乎是风马牛不相及的两个东西，而且从函数定义上看，traverse返回的是G[F[B]]，foldMap需要的却是B，怎么能统一起来呢？
-```scala`
+```scala
 trait Traverse[F[_]] {
     def traverse[G[_]: Applicative, A, B](fa: F[A])(f: A => G[B]): G[F[B]]
 
@@ -57,13 +57,13 @@ new Applicative[({type f[x] = Const[Z, x]})#f] {
 接下来要实现的是pure和apply的具体逻辑，注意到foldMap依赖的Monoid还没有被利用，此时正好派上用场。
 ```scala
 //step3. z是个monoid，借之定义applicative
-implicit def constApplicative2[Z: Monoid] =
+implicit def constApplicative3[Z: Monoid] =
 new Applicative[({type f[x] = Const[Z, x]})#f] {
   override def pure[A](a: => A): Const[Z, A] = Monoid[Z].zero
-  override def apply[A, B](fa: => Const[Z, A])(f: => Const[Z, A => B]): Const[Z, B] = Monoid[Z].append(fa, f)
+  override def apply[A, B](fa: => Const[Z, A])(f: => Const[Z, A => B]): Const[Z, B] = Monoid[Z].combine(fa, f)
 }
 ```
-至此，我们成功地利用Monoid为Const定义了一个Applicative。还差最后一步，以这个constApplicative为桥梁，用traverse推导foldMap。foldMap有A => B，但traverse需要的是A => G[B]，因G是Const，A => Const[B, _]等同于A => B，我们不关心Const第二个位置，所以传没有任何值的Nothing。这样，G是关于Const[B, Nothing]的Applicative，但构造器只接受一个类型，所以要再次借助于type lambda，完成桥接。
+至此，我们成功地利用Monoid为Const定义了一个Applicative。还差最后一步，以这个constApplicative为桥梁，用traverse推导foldMap。foldMap有A => B，但traverse需要的是A => G[B]，因G是Const，A => Const[B, _]等同于A => B，我们不关心Const第二个位置，所以传没有任何值的Nothing。这样，G必须是关于Const[B, Nothing]的Applicative，但Const有两个类型参数，而Applicative构造器只接受一个类型，所以要再次借助于type lambda，完成桥接。
 ```scala
 //step4.
 trait MyTraverse[F[_]] {
@@ -72,3 +72,25 @@ trait MyTraverse[F[_]] {
     def foldMap[A, B: Monoid](fa: F[A])(f: A => B): B = traverse[({type f[x] = Const[B, x]})#f, A, Nothing](fa)(f)
 }
 ```
+大功告成！快让新鲜出炉的基于traverse的foldLeft出场秀一下吧：
+```scala
+scala> val listTraverse = new Traverse[List] {
+           override def traverse[G[_] : Applicative, A, B](fa: List[A])(f: A => G[B]) = {
+             val m = implicitly[Applicative[G]]
+             fa.foldLeft(m.pure(List.empty[B])) { (accum, item) => m.apply2(accum, f(item))(_ :+ _) }
+           }
+    }
+listTraverse: Traverse[List] = $anon$1@71268b8c
+
+scala> listTraverse.foldLeft(List(1, 2, 3), 0)(_ + _)
+res0: Int = 6
+```
+回顾一下，整个推导的关键点在于constApplicative，也许更恰当的名称是monoidApplicative，因为它完成了Monoid到Applicative的转换，发挥了枢纽性作用。从结构和形式上看，Applicative可以视为一种Monoid。啊哈，又是一个不经意间的关联。具体怎么理解呢？如果把二者的核心方法克里化，分别为：
+* Monoid的combine：m -> m -> m。
+* Applicative的apply：f(a->b) -> f(a) -> f(b)，忽略内容后，可以再精练为f -> f ->f。
+
+看到了吧，二者在形式结构上完全一致。
+
+最后，请后退一步，把眼光放到更大的视野上，关于Foldable、Traversable等几个概念，可以得出如下图所示的关系：
+![functor](../imgs/fold_trav_mon_app.png)
+其中Traversable1和Apply的关系类似于Foldable1和Semigroup的关系，描述非空数据结构的情形。黑实线描述继承关系，紫实线描述上面讲的形式结构一致性，虚线描述的则是左侧Trait在实现上对右侧Trait的依赖关系。

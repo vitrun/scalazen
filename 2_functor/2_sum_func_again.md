@@ -8,7 +8,7 @@
 ```scala
 scala> def sum[A: Monoid](l: List[A]): A = {
         val m = implicitly[Monoid[A]]
-        l.foldLeft(m.mzero)(m.mappend)
+        l.foldLeft(m.zero)(m.combine)
       }
 sum: [A](l: List[A])(implicit evidence$1: Monoid[A])A
 
@@ -39,10 +39,10 @@ def sum[F[_]: Foldable, A: Monoid](xs: F[A]): A = {
 ```scala
 object Foldable {
     implicit val ListFoldable: Foldable[List] = new Foldable[List] {
-        def foldLeft[A](xs: List[A])(m: Monoid[A]) = xs.foldLeft(m.mzero)(m.mappend)
+        def foldLeft[A](xs: List[A])(m: Monoid[A]) = xs.foldLeft(m.zero)(m.combine)
     }
     implicit val SetFoldable: Foldable[Set] = new Foldable[Set] {
-        def foldLeft[A](xs: Set[A])(m: Monoid[A]) = xs.foldLeft(m.mzero)(m.mappend)
+        def foldLeft[A](xs: Set[A])(m: Monoid[A]) = xs.foldLeft(m.zero)(m.combine)
     }
 }
 ```
