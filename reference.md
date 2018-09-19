@@ -13,5 +13,6 @@
 * https://stackoverflow.com/questions/19880207/when-and-why-should-one-use-applicative-functors-in-scala/19881777#19881777
 * http://www.danishin.com/article/Foldable_vs_Traverse_In_Scala
 * https://stackoverflow.com/questions/45010424/how-are-monoid-and-applicative-connected
+* https://gist.github.com/jdegoes/97459c0045f373f4eaf126998d8f65dc
 * scala with cats
 
