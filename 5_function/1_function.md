@@ -29,7 +29,7 @@ def string(num: Int): Conv[Int] = x => (x + num).toString
 ```
 用Conv代替A => String更简洁明了。
 
-继续。如果一个函数的定义域（输入）可以接受不同类型，我们称之为*多态*函数。Scala不支持多态函数，但可以通过Apply方法模拟出多态。
+继续。如果一个函数的定义域（输入）可以接受不同类型，我们称之为*多态*函数。Scala不支持多态函数，但可以通过apply方法模拟出多态。
 ```scala
 scala> case object identity {
   def apply[A](value: A): A = value
@@ -42,7 +42,8 @@ res0: Int = 3
 scala> identity("4")
 res1: String = 4
 ```
-这个例子中，identity可以接受任意类型，并返回原始值。
+这个例子中，identity
+可以接受任意类型，并返回原始值。也许你已经发现，这里的多态和面对对象世界里的多态有所不同。我们没有用父子类、接口等继承关系，而是对参数做了抽象，因此，也称为*参数多态*（parametric polymorphism）。
 
 <div class="alert alert-success">
 Scala的apply方法是一种语法糖，用于描述类或对象的最主要使用场景。identity(3)是下面方法调用的简化写法。
