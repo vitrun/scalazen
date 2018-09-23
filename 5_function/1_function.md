@@ -31,9 +31,11 @@ def string(num: Int): Conv[Int] = x => (x + num).toString
 
 继续。如果一个函数的定义域（输入）可以接受不同类型，我们称之为*多态*函数。Scala不支持多态函数，但可以通过Apply方法模拟出多态。
 ```scala
-case object identity {
+scala> case object identity {
   def apply[A](value: A): A = value
 }
+defined object identity
+
 scala> identity(3)
 res0: Int = 3
 
@@ -41,3 +43,18 @@ scala> identity("4")
 res1: String = 4
 ```
 这个例子中，identity可以接受任意类型，并返回原始值。
+
+<div class="alert alert-success">
+Scala的apply方法是一种语法糖，用于描述类或对象的最主要使用场景。identity(3)是下面方法调用的简化写法。
+<p>
+scala> identity.apply(3)<br/>
+res2: Int = 3<br/>
+</p>
+Scala既是函数式语言，也是面向对象语言，函数本身也是对象。相比于编程员“<b>调用</b>函数f，传入参数x”，数学家更习惯于“<b>应用</b>函数f到参数x”。<br/>
+当你定义以下函数时，其实是定义了Function1[Int,Int]类型的对象，f是对该对象的引用。
+<p>
+val f =  (x: Int) => x + 1
+</p>
+除了f(3)这种函数式的写法，还可以用繁琐的面向对象式写法f.apply(3)。
+</div>
+

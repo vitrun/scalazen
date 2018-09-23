@@ -14,5 +14,6 @@
 * http://www.danishin.com/article/Foldable_vs_Traverse_In_Scala
 * https://stackoverflow.com/questions/45010424/how-are-monoid-and-applicative-connected
 * https://gist.github.com/jdegoes/97459c0045f373f4eaf126998d8f65dc
+* https://stackoverflow.com/questions/9737352/what-is-the-apply-function-in-scala
 * scala with cats
 
