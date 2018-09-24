@@ -82,7 +82,7 @@ res2: List[(Int, Int)] = List((1,3), (1,4), (2,3), (2,4))
 scala> listApp.apply2(List(1, 2), List(3, 4))(_ + _)
 res3: List[Int] = List(4, 5, 5, 6)
 ```
-注意，apply2计算结果的元素数量等于两个入参元素数量的乘积。其原因可以从apply2和apply的实现中找到，apply2执行第一次apply时得到的fb是部分施用的函数列表，长度和fa，即例子中的List(1, 2)一致，第二次apply时，则对fb中的每个元素执行该列表的每一个函数。
+注意，apply2计算结果的元素数量等于两个入参元素数量的乘积。其原因可以从apply2和apply的实现中找到，apply2执行第一次apply时得到的fb是部分施用的函数列表，长度和fa，即例子中的`List(1, 2)`一致，第二次apply时，则对fb中的每个元素执行该列表的每一个函数。
 
 上述过程中，apply2通过apply推导而来，凭直觉，apply应该也得能apply2表示，事实也确实如此：
 ```scala
@@ -105,4 +105,4 @@ def map[A, B](fa: F[A])(fab: A => B): F[B] = apply(fa)(pure(fab))
 ```
 所以，Applicative天然是个Functor，可以从Functor拓展而来。
 
-稍做总结，有两个角度理解Applicative比常规Functor更厉害的地方。首先，Applicative知道如何在容器环境中执行装在同样容器里的函数。比如，给定一个Option[Int]容器，它知道如何对它执行Option[Int => Int]，而常规Functor里的map只具备执行Int => Int的能力。另一个角度是，Applicative能执行多参数的函数，而常规Functor只能执行单参数函数。
+稍做总结，有两个角度理解Applicative比常规Functor更厉害的地方。首先，Applicative知道如何在容器环境中执行装在同样容器里的函数。比如，给定一个Option[Int]容器，它知道如何对它执行`Option[Int => Int]`，而常规Functor里的map只具备执行`Int => Int`的能力。另一个角度是，Applicative能执行多参数的函数，而常规Functor只能执行单参数函数。

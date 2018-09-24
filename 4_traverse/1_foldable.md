@@ -33,7 +33,7 @@ Foldable让Monoid有了更多发挥的空间。Foldable需要一个积累值（A
 def foldLeft[A](xs: List[A])(m: Monoid[A]): A = xs.foldLeft(m.zero)(m.combine)
 ```
 
-二者结合，产生很多有用的函数，如foldMap：游览可折叠结构，过程中先对元素进行map操作，再用Monoid的combine结合map的结果。如果这么解释还是有点抽象的话，foldMap有个热门的同义词mapReduce，想必你已经很熟悉了。给定一个类型A的集合，和A => B的函数，在已知如何合并B（比如，整数的加法）的情况下，可以算出一个汇总值，比如经典例子统计字符数。由于不限定运算的顺序，所以可以优化为并行计算。
+二者结合，产生很多有用的函数，如foldMap：游览可折叠结构，过程中先对元素进行map操作，再用Monoid的combine结合map的结果。如果这么解释还是有点抽象的话，foldMap有个热门的同义词mapReduce，想必你已经很熟悉了。给定一个类型A的集合，和`A => B`的函数，在已知如何合并B（比如，整数的加法）的情况下，可以算出一个汇总值，比如经典例子统计字符数。由于不限定运算的顺序，所以可以优化为并行计算。
 
 ```scala
 val listFoldable = new Foldable[List] {

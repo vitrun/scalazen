@@ -4,7 +4,7 @@
 
 
 #### 熟悉又陌生的Monad
-对于map方法可接受的函数，我们已经接触了Functor中的常规函数A => B，以及Applicative中装在容器里的函数：F[A => B]。所以，当出现A => F[B]时，大概你不会感到奇怪。再次，为了区别，把接受A => F[B]的map称为flatMap，对应的特殊Functor称为Monad：
+对于map方法可接受的函数，我们已经接触了Functor中的常规函数`A => B`，以及Applicative中装在容器里的函数：`F[A => B]`。所以，当出现`A => F[B]`时，大概你不会感到奇怪。再次，为了区别，把接受`A => F[B]`的map称为flatMap，对应的特殊Functor称为Monad：
 ```scala
 scala> trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B] = flatten(map(fa)(f))
@@ -43,16 +43,16 @@ def flatten[A](ffa: F[F[A]]): F[A] = flatMap(ffa)(x => x)
 ```
 scala官方库中并没有一个Monad类，但它已然随处可见。List、Set、Option等，我们再熟悉不过了，它们都是Monad。判断是否Monad并不是看有没有方法叫flatMap和pure，甚至并不看有没有签名一致的方法，而是看行为表现是否符合Monad概念。没错，Monad是一个概念，一个熟悉又陌生的概念。
 
-假设一个基本类型的值x，一个容器实例m（装了某个值）和Int => M[Int]类型的函数f、g，如果以下法则得到满足，m就是Monad：
-* 左单位元法则： pure(x).flatMap(f) == f(x)
-* 右单位元法则： m.flatMap(pure) == m
-* 结合性法则： m.flatMap(f).flatMap(g) == m.flatMap(x => f(x).flatMap(g))
+假设一个基本类型的值x，一个容器实例m（装了某个值）和`Int => M[Int]`类型的函数f、g，如果以下法则得到满足，m就是Monad：
+* 左单位元法则： `pure(x).flatMap(f) == f(x)`
+* 右单位元法则： `m.flatMap(pure) == m`
+* 结合性法则： `m.flatMap(f).flatMap(g) == m.flatMap(x => f(x).flatMap(g))`
 
 Applicative是比Functor更强的概念，有更多约束，Functor的map可以用Applicative的apply表示；相应地，Monad是比Applicative还要强的概念，其约束进一步增加，Applicative的apply可以用Monad的flatMap表示：
 ```scala
 def apply[A, B](fab: F[A => B])(fa: F[A]): F[B] = flatMap(fab)(f => map(fa)(f))
 ```
-这个推导过程可能不是那么显而易见，当把F[A => B]传给F[C]时（注意，为了区分，我们把flatMap的A换成C），说明C代表的是个函数，还缺的C => F[B]可通过map来构造，map克里化后可写为F[A] => C=> F[B]，现成的fa满足了F[A]参数，部分施用之后得到的正是缺少的C => F[B]。
+这个推导过程可能不是那么显而易见，当把`F[A => B]`传给F[C]时（注意，为了区分，我们把flatMap的A换成C），说明C代表的是个函数，还缺的`C => F[B]`可通过map来构造，map克里化后可写为`F[A] => C=> F[B]`，现成的fa满足了F[A]参数，部分施用之后得到的正是缺少的`C => F[B]`。
 
 用一句伪代码表示三者的递进关系：Monad extends Applicative extends Functor。
 
@@ -60,9 +60,9 @@ def apply[A, B](fab: F[A => B])(fa: F[A]): F[B] = flatMap(fab)(f => map(fa)(f))
 Functor可以无限组合，多个map串联起来形成调用链，但因为Functor的map接受的是A => A函数，前后类型必须保持一致，使得其应用场景受到很大限制。Monad打破了这一限制，能够触发真正的链式反应。
 
 web应用中，根据用户输入做一系列操作是很常见的功能。比如，博客应用中，用户通过邮箱登录，打开最近发布的文章，查看文章的评论。这一过程中，我们需要调用以下方法：
-* getUser: String => Option[User] // 从db中加载用户
-* getBlog: User => Option[Blog] // 查询文章
-* getComment: Blog => Option[Comment] // 查询评论
+* `getUser: String => Option[User]` // 从db中加载用户
+* `getBlog: User => Option[Blog]` // 查询文章
+* `getComment: Blog => Option[Comment]` // 查询评论
 注意，每个方法的返回都是装在Option容器里的值，表示可能存在，也可以不存在要查询的内容。
 
 ```scala

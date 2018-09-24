@@ -57,7 +57,7 @@ val idMonad = new Monad[Id] {
 }
 idMonad: Monad[scalaz.Scalaz.Id] = $anon$1@4f1ee0c6
 ```
-不知你是否注意到，flatMap中Id[A]可以直接传给A => Id[B]，map中期待返回Id[B]，却接受A => B的返回而没有报怨。还有，flatMap和map的定义完全一致！进而，可以写出这样的代码：
+不知你是否注意到，flatMap中Id[A]可以直接传给`A => Id[B]`，map中期待返回Id[B]，却接受`A => B`的返回而没有报怨。还有，flatMap和map的定义完全一致！进而，可以写出这样的代码：
 ```scala
 scala> idMonad.flatMap(1){_ * 2}
 res6: scalaz.Scalaz.Id[Int] = 2

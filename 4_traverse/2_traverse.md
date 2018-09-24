@@ -40,7 +40,7 @@ scala> Await.result(users, 1.second)
 res0: List[User] = List(User(343), User(8481), User(8914))
 ```
 
-Foldable固然可以，但有不少脚手架代码，为了说明，我们再举一例：把指定数值转换成星星数，数值小0时认为是非法数据。类似地，对于Vector[Int]，和函数Int => Option[String]，本来在map后将得到Vector[Some[String]]，但我们希望的是Some[Vector[String]]。
+Foldable固然可以，但有不少脚手架代码，为了说明，我们再举一例：把指定数值转换成星星数，数值小0时认为是非法数据。类似地，对于Vector[Int]，和函数`Int => Option[String]`，本来在map后将得到Vector[Some[String]]，但我们希望的是Some[Vector[String]]。
 ```scala
 def getStar(num: Int): Option[String] = if (num < 0) None else Some(num + " stars")
 
