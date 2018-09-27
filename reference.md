@@ -17,6 +17,7 @@
 * https://stackoverflow.com/questions/9737352/what-is-the-apply-function-in-scala
 * https://alvinalexander.com/scala/fp-book/partially-applied-functions-currying-in-scala
 * https://stackoverflow.com/questions/8063325/usefulness-as-in-practical-applications-of-currying-v-s-partial-application-i
+* https://en.wikipedia.org/wiki/Pure_function
 
 * Functional Programming in Scala
 * scala with cats
