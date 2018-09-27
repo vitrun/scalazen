@@ -33,10 +33,24 @@ scala> divide(3, 0)
 java.lang.ArithmeticException: / by zero
 ```
 
-也不是所有集体类的方法都是纯函数，foreach方法就是专门为副作用准备的。
+也不是所有集合类的方法都是纯函数，foreach方法就是专门为副作用准备的。
 ```scala
 def foreach[U](f: A => U): Unit
 ```
 Unit在scala中表示"没有东西"，如果一个函数接受了输入，但不返回任何结果，那么它做的工作就只能是"副作用"了。
 
+常见的非纯函数还有：
+* getDayOfWeek，getHour，getMinute等方法，因为不同时刻调用它们得到的结果不同。
+* scala.util.Random中用于生成随机数的nextInt，因为返回值依赖了输入之外的隐藏状态。
+* I/O操作，如`def println(x: Any): Unit`和`def readLine(): String`。所以，当发现签名的入参为空或出参为Unit时，就得擦亮眼睛了。
+* 改变了函数/方法之外的对象、状态，如：
+    ```scala
+    object pureFunction {
+      var num = 1
 
+      def add(delta: Int): Int = {
+        num += delta
+        num
+      }
+    }
+    ```
