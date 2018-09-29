@@ -1,0 +1,32 @@
+{
+    "author": "Yu Zhirun <vitrun@gmail.com>",
+    "description": "A minimal learning path of functional programming",
+    "extension": null,
+    "links": {
+        "sharing": {
+            "all": null,
+            "facebook": null,
+            "google": null,
+            "twitter": null,
+            "weibo": null
+        },
+        "sidebar": {
+        }
+    },
+    "pdf": {
+        "fontSize": 13,
+        "footerTemplate": null,
+        "headerTemplate": null,
+        "margin": {
+            "bottom": 36,
+            "left": 62,
+            "right": 62,
+            "top": 36
+        },
+        "pageNumbers": true,
+        "paperSize": "a4"
+    },
+    "plugins": [],
+    "title": "函数式，从代码到架构",
+    "variables": {}
+}
