@@ -6,8 +6,9 @@
 - [Function](5_function/READMD.md)
     - [人尽皆知的函数](5_function/1_function.md)
     - [鲜为人知的函数](5_function/2_advanced_func.md)
-    - [纯函数的特质](5_function/3_pure_fp.md)
-    - [纯函数的好处](5_function/4_why_pure_fp.md)
+    - [是函数，也是值](5_function/3_val_def.md)
+    - [纯函数的特质](5_function/4_pure_fp.md)
+    - [纯函数的好处](5_function/5_why_pure_fp.md)
 
 - [Type](6_type/READMD.md)
     - Algebraic Data Types

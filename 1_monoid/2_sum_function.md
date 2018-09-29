@@ -1,5 +1,5 @@
-# 从求和函数说起
-#### 归纳出Monoid
+## 从求和函数说起
+##### 归纳出Monoid
 让我们从一个非常简单的求和函数说起。下面函数对整数列表求和：
 ```scala
 scala> def sum(xs: List[Int]): Int = xs.foldLeft(0){_ + _}
@@ -55,7 +55,7 @@ scala> sum(List("a", "b", "c"), StringMonoid)
 res3: String = abc
 ```
 不难发现，只要定义了类型（集合）的combine（运算）和zero（单位元），该类型便自动具备了进行sum运算的能力。
-#### 使用隐含参数
+##### 使用隐含参数
 比较麻烦的是，每次都要手动传入Monoid的具体类型。使用scala的implicit parameter特性，可以省去此麻烦。
 ```scala
 scala> def sum[A](xs: List[A])(implicit m:Monoid[A]):A = xs.foldLeft(m.zero)(m.combine)

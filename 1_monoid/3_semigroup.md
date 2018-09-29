@@ -1,4 +1,4 @@
-# Monoid的副产品
+## Monoid的副产品
 
 事实上，Monoid是从Semigroup派生而来的。**Semigroup**（半群）相对于Monoid少了单位元，它只要求满足结合律，从代码上看则只定义了combine运算。
 ```scala
