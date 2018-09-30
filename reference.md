@@ -19,6 +19,7 @@
 * https://stackoverflow.com/questions/8063325/usefulness-as-in-practical-applications-of-currying-v-s-partial-application-i
 * https://en.wikipedia.org/wiki/Pure_function
 * https://alvinalexander.com/scala/fp-book/benefits-of-pure-functions
+* https://alvinalexander.com/scala/fp-book-diffs-val-def-scala-functions
 
 * Functional Programming in Scala
 * scala with cats

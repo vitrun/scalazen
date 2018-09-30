@@ -20,7 +20,19 @@ class ValFunc {
   val echo = (a: Int) => a
 }
 ```
-注意，val定义函数时的语法，转换符`=>`前面是输入参数，后面是函数体，缺省的返回值类型由编译器自动推导得到。
+注意，val定义函数时的语法，转换符`=>`前面是输入参数，后面是函数体，缺省的返回值类型由编译器自动推导得到。val定义值的常用形式是`variableName: type = value`，定义函数也可以用这种形式，函数值和其它类型值并无差异：
+```scala
+scala> val echo: Int => Int = {a => a}
+echo: Int => Int = $$Lambda$1395/1361950369@5d38011e
+
+scala> val f: (Any) => Boolean = {
+  case i: Int => i % 2 == 0
+}
+f: Any => Boolean = $$Lambda$1527/266267045@3eb04c79
+
+scala> List(3, 4).filter(f)
+res0: List[Int] = List(4)
+```
 
 对ValFunc执行类似DefFunc的编译和反编译过程，便会发现echo是一个实现了Function1接口的匿名类的实例，和普通的val用法 ，如`val anInt = 3`，并无二致。Function系统接口定义的apply方法，是真正的逻辑实体，`echo(3)`不过是`echo.apply(3)`的语法糖。既然echo是Function1接口的实例，那么以下繁琐的写法是等效的：
 ```scala
@@ -34,7 +46,7 @@ scala> def reEcho(a: Int, f: Int => Int): Int = f(a)
 reEcho: (a: Int, f: Int => Int)Int
 
 scala> reEcho(2, echo)
-res0: Int = 2
+res1: Int = 2
 ```
 与方法pk，函数也存在力有不逮的时候，方法可以直接使用泛型：
 ```scala
@@ -42,7 +54,27 @@ def len[A, B](a: A, b: B): Int = {
   a.toString.length + b.toString.length
 }
 ```
-编译器却会报怨函数使用泛型，这种写法无法通过：`val len[A, B] = (a: A, b: B) => a.toString.length + b.toString.length`。绕过去的方式是先定义一个实现了Function2接口的类，再创建该类的实例，和前面用Function1接口定义echo函数类似，繁琐又不常用，按下不表。
+编译器却会报怨定义函数时使用泛型：`val len[A, B] = (a: A, b: B) => a.toString.length + b.toString.length`。绕过去的方式是先定义一个实现了Function2接口的类，再创建该类的实例，和前面用Function1接口定义echo函数类似，繁琐又不常用，按下不表。
 
+以上，val用于定义函数，def用于定义方法，二者分工明确。可能会让人迷惑的是，def也可以直接用于定义函数，`def echo: Int => Int = {a => a}`也是合法的。姑且把两种方式定义的函数称为"val函数"和"def函数"。二者的差异比较微妙，val函数在定义时就会求值；而def函数在调用时才触发求值，REPL的反应证明了这点：
+```scala
+scala> val even: Int => Boolean = ???
+scala.NotImplementedError: an implementation is missing
 
+scala> def even: Int => Boolean = ???
+even: Int => Boolean
 
+scala> even
+scala.NotImplementedError: an implementation is missing
+```
+当然，这和人们对val、def一贯的印象是一致的，除非加了lazy修饰，否则val是立刻被求值的，而def定义方法并不意味着方法立刻执行，在实际调用时才会执行。基于此，便不难得到：val函数后续调用时不再重新求值，总是返回定义时得到的值，而def函数每次调用都重新执行，得到的值但可能不一样（视函数逻辑而定）。
+请试试把test前头的val改为def，看看两次调用test的结果有什么不同。
+```scala
+val test: () => Int = {
+  val r = util.Random.nextInt
+  () => r
+}
+
+test()
+test()
+```
