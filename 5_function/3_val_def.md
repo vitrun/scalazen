@@ -67,7 +67,9 @@ even: Int => Boolean
 scala> even
 scala.NotImplementedError: an implementation is missing
 ```
-当然，这和人们对val、def一贯的印象是一致的，除非加了lazy修饰，否则val是立刻被求值的，而def定义方法并不意味着方法立刻执行，在实际调用时才会执行。基于此，便不难得到：val函数后续调用时不再重新求值，总是返回定义时得到的值，而def函数每次调用都重新执行，得到的值但可能不一样（视函数逻辑而定）。
+当然，这和人们对val、def一贯的印象是一致的，除非加了lazy修饰，否则val是立刻被求值的，而def
+定义方法并不意味着方法立刻执行，在实际调用时才会执行。基于此，便不难得到两种求值策略：val
+函数后续调用时不再重新求值，总是返回定义时得到的值，而def函数每次调用都重新执行，得到的值可能不一样（视函数逻辑而定）。
 请试试把test前头的val改为def，看看两次调用test的结果有什么不同。
 ```scala
 val test: () => Int = {
@@ -78,3 +80,30 @@ val test: () => Int = {
 test()
 test()
 ```
+
+函数的参数形式也会影响求值策略，试看以下两个函数，注意参数x的不同定义方式：
+```scala
+def callByValue(x: Int) = {
+  println("x1=" + x)
+  println("x2=" + x)
+}
+
+def callByName(x: => Int) = {
+  println("x1=" + x)
+  println("x2=" + x)
+}
+```
+前者是传值（by-value），后者是传名（by-name）。 在终端内分别执行`callByValue(something)`和`callByName(something)`，对比结果即可发现二者的区别。
+```scala
+def something() = {
+  println("calling something")
+  1
+}
+something: ()Int
+```
+可以简单地认为：
+* 传值参数类似于val定义，当绑定到函数时，参数体一次性完成求值。
+* 传名参数类似于def定义，当在函数内部每次使用到时，都对参数体进行一次求值。
+
+但刻意提“传值“、“传名”的概念有故弄玄虚之嫌。换个视角解读这两种参数形式，会发现它们在求值策略上的区别是再自然不过的。`Int`就是个平常的值类型，绑定函数时求出该值，这是一次性操作；而`=>Int
+`可以理解为不需要参数同时返回值为Int的函数，所以此时绑定的是作为一等公民的函数，每次使用到时就执行一次，正是我们对函数的一贯预期。
