@@ -20,6 +20,7 @@
 * https://en.wikipedia.org/wiki/Pure_function
 * https://alvinalexander.com/scala/fp-book/benefits-of-pure-functions
 * https://alvinalexander.com/scala/fp-book-diffs-val-def-scala-functions
+* http://algosaur.us/recursion/
 
 * Functional Programming in Scala
 * scala with cats
