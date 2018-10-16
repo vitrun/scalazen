@@ -9,7 +9,8 @@
     - [是函数，也是值](5_function/3_val_def.md)
     - [纯函数的特质](5_function/4_pure_fp.md)
     - [纯函数的好处](5_function/5_why_pure_fp.md)
-    - [优雅的递归](5_function/6_recursion.md)
+    - [像代数推导一般](5_function/6_fp_algebra.md)
+    - [优雅的递归](5_function/7_recursion.md)
 
 ##### Types
 - [Type](6_type/READMD.md)
