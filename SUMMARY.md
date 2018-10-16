@@ -2,7 +2,7 @@
 
 - [前言](README.md)
 
-##### 函数和类型
+##### Functions
 - [Function](5_function/READMD.md)
     - [人尽皆知的函数](5_function/1_function.md)
     - [鲜为人知的函数](5_function/2_advanced_func.md)
@@ -11,7 +11,9 @@
     - [纯函数的好处](5_function/5_why_pure_fp.md)
     - [优雅的递归](5_function/6_recursion.md)
 
+##### Types
 - [Type](6_type/READMD.md)
+    - FP as algebra
     - Algebraic Data Types
     - Subtyping
     - Supertyping
@@ -19,7 +21,7 @@
     - Higher-Kinded Types
     - Existentials
 
-##### Type class
+##### Type classes
 - [Monoid](1_monoid/README.md)
     - [重温代数运算](1_monoid/1_revisit_algebra.md)
     - [从求和说起](1_monoid/2_sum_function.md)
@@ -51,7 +53,7 @@
     - Reader
     - Combining Effects
 
-##### 架构
+##### Architecture
 - [architecture]()
     - Functional Domain Modeling
     - Onion Architecture
