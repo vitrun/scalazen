@@ -1,0 +1,4 @@
+.markdown-section { line-height: 1.8; }
+.markdown-section pre{ padding:.5em .3em;margin-bottom:.5em; }
+.markdown-section pre>code { font-size: .9em;}
+.alert {line-height: 2.2em}

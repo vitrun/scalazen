@@ -1,0 +1,4 @@
+.page .section{line-height:1.7}
+.page .section code{font-size:1em;}
+.page .section pre{margin:0;padding:.5em .3em;margin-bottom:.5em;font-size:1.1em;font-family:"monospace";}
+.alert {line-height: 2.2em}
