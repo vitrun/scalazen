@@ -22,6 +22,7 @@
 * https://alvinalexander.com/scala/fp-book-diffs-val-def-scala-functions
 * http://algosaur.us/recursion/
 * https://www.quora.com/Why-is-referential-transparency-a-good-idea
+* http://daily.zhihu.com/story/9136167
 
 * Functional Programming in Scala
 * scala with cats

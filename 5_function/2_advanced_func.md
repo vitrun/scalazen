@@ -97,7 +97,7 @@ def plus(a: Int, implicit b: Int): Int = a + b
 ```
 
 <div class="alert alert-info">
-我们已经两次碰到了下划线"_"，在Scala里，下划线有很多含义和用途。<br/>
+我们已经两次碰到了下划线"_"，在Scala里，下划线有很多含义和用途，其中：<br/>
 <ul>
 <li>cook(3, _: Int)和{_ < 
 3}两个例子中的下划线都表示函数参数占位符，是最常见的用途。如果有多个参数，则按顺序依次对应，如List(1, 2, 3).foldLeft(0){_ + _}。<br/>
