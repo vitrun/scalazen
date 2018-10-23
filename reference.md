@@ -23,6 +23,7 @@
 * http://algosaur.us/recursion/
 * https://www.quora.com/Why-is-referential-transparency-a-good-idea
 * http://daily.zhihu.com/story/9136167
+* http://www.ruanyifeng.com/blog/2015/04/tail-call.html
 
 * Functional Programming in Scala
 * scala with cats
