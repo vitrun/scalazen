@@ -64,7 +64,7 @@ def factorial(n: Int): Int = n match {
 ```
 
 ##### 尾递归的实现
-普通的递归有比较明显的局限性，如果你尝试求一个比较大的数的阶乘，可能会碰到`java.lang.StackOverflowError`错误。
+普通的递归有比较明显的局限性，如果你尝试求一个比较大的数的阶乘，可能会碰到StackOverflowError错误。
 
 我们知道，函数调用会在线程的栈内存中生成一个"调用记录"，又称"调用帧"（call frame），保存调用位置、内部变量等信息。如果在函数A的内部调用函数B，那么在A的调用记录上方，还会生成一个B的调用记录。等到B运行结束，将结果返回到A，B的调用记录才会消失。若函数B又调用别的函数，则又在其上插入相应帧记录，以此类推。而递归恰恰就是一次函数调用还没结束就发起另一次调用，虽然两次调用的是同一个函数。触发这个错误的具体数值和JVM的栈设置以及方法本身有关，令人遗憾的是，这个数值并不需要太高大，笔者的机器上8000就触发了factorial方法栈溢出错误。
 
@@ -75,5 +75,42 @@ def sum2(a: List[Int], b: List[Int]): Int = {
 }
 ```
 
-可见，如果函数的最后只是调用了另一个函数，就存在帧复用的可能。放在递归的场景里，如果递归的最后只是单纯调用自身，不附加其它逻辑（如`head + sum(tail)`或`n * factorial(n-1)`），则可以实现帧的复用。我们将这种形式的递归称为**尾递归**。
+可见，如果函数的最后只是调用了另一个函数，就存在帧复用的可能。放在递归的场景里，如果递归的最后只是单纯调用自身，不附加其它逻辑（如`head + sum(tail)`或`n * factorial(n-1)`），则可以实现帧的复用，不再引发栈溢出错误。我们将这种形式的递归称为**尾递归**。
+
+让我们试着把普通递归的函数优化为尾递归函数。以`sum`为例，因为函数的最后语句除了调用自身以外，不能再有别的逻辑，所以干脆把"别的"逻辑也纳入到函数内。那么，新的函数声明为`def tailSum(n: Int, l: List[Int]): Int`，`+`这个额外计算原来是子调用返回后进行，现在改到了进入子调用前进行。这样当前帧但不用保存。原先的`sum`不再直接调用自身，而是调用`tailSum`：
+
+```scala
+def tailSum(n: Int, l: List[Int]): Int =  l match {
+  case Nil => n
+  case head:: tail => tailSum(n + head, tail)
+}
+
+def sum(l: List[Int]): Int = l match {
+  case Nil => 0
+  case head:: tail => tailSum(head, tail)
+}
+```
+
+对比二者函数调用的嵌套情况如下，`sum`越嵌越多，而`tailSum`一直保持稳定：
+```
+sum(List(4, 3, 2, 1))                         sum(List(4, 3, 2, 1))
+4 + sum(List(3, 2, 1))                        tailSum(4, List(3, 2, 1))
+4 + (3 + sum(List(2, 1)))                     tailSum(7, List(2, 1))
+4 + (3 + (2 + sum(List(1))))                  tailSum(9, List(1))
+4 + (3 + (2 + 1 + sum(List()))))              tailSum(10, List())
+```
+
+那么，是否所有递归都可以优化为尾递归呢？答案是肯定的。注意到，优化的手段是**把"额外"的计算逻辑从调用返回后改成发起子调用前**，而不论这个"额外"的逻辑有多复杂，它的参数终归也是子调用的参数，所以我们总是可以基于子调用的参数写出段逻辑，要么是先计算好再传给子调用，要么是把逻辑整体以闭包形式传给子调用。
+
+而且，所有循环都可以写成尾递归形式。以下，循环条件`Predicate`、循环逻辑`doSomething`和返回值`Result`都不失一般性，其循环写法`loop`和尾递归写法`recurse`等效。
+
+```scala
+def Predicate(): Boolean = ???
+def doSomething(): Unit = ???
+def Result(): Any = null
+
+def loop(): Any = while(Predicate) { doSomething }; Result
+
+def recurse(): Any = if (Predicate) { doSomething; recurse() } else Result
+```
 

@@ -24,6 +24,7 @@
 * https://www.quora.com/Why-is-referential-transparency-a-good-idea
 * http://daily.zhihu.com/story/9136167
 * http://www.ruanyifeng.com/blog/2015/04/tail-call.html
+* https://stackoverflow.com/questions/33923/what-is-tail-recursion?rq=1
 
 * Functional Programming in Scala
 * scala with cats
