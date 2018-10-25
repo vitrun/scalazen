@@ -14,7 +14,7 @@
 
 ##### Types
 - [Type](6_type/READMD.md)
-    - FP as algebra
+    - [为什么需要类型](6_type/1_why_type.md)
     - Algebraic Data Types
     - Subtyping
     - Supertyping
