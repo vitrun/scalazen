@@ -25,6 +25,8 @@
 * http://daily.zhihu.com/story/9136167
 * http://www.ruanyifeng.com/blog/2015/04/tail-call.html
 * https://stackoverflow.com/questions/33923/what-is-tail-recursion?rq=1
+* https://docs.scala-lang.org/tour/unified-types.html
+* https://kubuszok.com/compiled/kinds-of-types-in-scala/
 
 * Functional Programming in Scala
 * scala with cats
