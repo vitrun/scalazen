@@ -29,5 +29,6 @@
 * https://kubuszok.com/compiled/kinds-of-types-in-scala/
 
 * Functional Programming in Scala
-* scala with cats
+* Scala with cats
 * Functional Thinking
+* Type-driven Development with Idris
