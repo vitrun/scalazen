@@ -15,7 +15,7 @@
 ##### Types
 - [Type](6_type/READMD.md)
     - [为什么需要类型](6_type/1_why_type.md)
-    - Algebraic Data Types
+    - [代数数据类型](6_type/2_adt.md)
     - Subtyping
     - Supertyping
     - Universals
