@@ -25,7 +25,7 @@ scala> val f = (i: Int) => Some((i + 1) + " stars")
 scala> Some(3).flatMap(f)
 res0: Option[String] = Some(4 stars)
 ```
-flatten方法构成了Monad区别于一般Functor的关键因素，如果没有它，我们只能不断地嵌套容器，无法消除重复的容器。正是"压扁容器"的能力，使得flatMap有了比map更大的威力，它包含了map所能实现的功能。所以，比起上面的Monad定义，更常用、理简洁的定义是：
+flatten方法构成了Monad区别于一般Functor的关键因素，如果没有它，我们只能不断地嵌套容器，无法消除重复的容器。正是"压扁容器"的能力，让flatMap有了比map更大的威力，它包含了map所能实现的功能。所以，比起上面的Monad定义，更常用、理简洁的定义是：
 ```scala
 scala> trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
@@ -57,7 +57,7 @@ def apply[A, B](fab: F[A => B])(fa: F[A]): F[B] = flatMap(fab)(f => map(fa)(f))
 用一句伪代码表示三者的递进关系：Monad extends Applicative extends Functor。
 
 #### 触发链式反应
-Functor可以无限组合，多个map串联起来形成调用链，但因为Functor的map接受的是A => A函数，前后类型必须保持一致，使得其应用场景受到很大限制。Monad打破了这一限制，能够触发真正的链式反应。
+Functor可以无限组合，多个map串联起来形成调用链，但因为Functor的map接受的是A => A函数，前后类型必须保持一致，致使应用场景受到很大限制。Monad打破了这一限制，能够触发真正的链式反应。
 
 web应用中，根据用户输入做一系列操作是很常见的功能。比如，博客应用中，用户通过邮箱登录，打开最近发布的文章，查看文章的评论。这一过程中，我们需要调用以下方法：
 * `getUser: String => Option[User]` // 从db中加载用户

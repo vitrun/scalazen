@@ -24,7 +24,7 @@ res0: Food = Food(Scrambled 3 eggs with 4 tomatoes)
 scala> addTomato(3)
 res1: Food = Food(Scrambled 3 eggs with 3 tomatoes)
 ```
-可见，有了部分施用后，我们可以先抽象出一般性的函数(cook)，在此基础上再写出具体的函数(addTomato)。部分施用，使得在不复制代码的情况下，甚至不用额外定义辅助函数`def addTomato(num: Int) = cook(3, num)`
+可见，有了部分施用后，我们可以先抽象出一般性的函数(cook)，在此基础上再写出具体的函数(addTomato)。部分施用，这样在不复制代码的情况下，甚至不用额外定义辅助函数`def addTomato(num: Int) = cook(3, num)`
 ，就得到了两个同时可用的函数。当然，没有任何理由限制哪几个参数可以被固定，所以固定西红柿数量，鸡蛋数量自由发挥也是可以的：`val addEgg = cook(_: Int , 2)`。
 
 cook可以视为对一种厨艺的描述——把若干数量鸡蛋和西红柿变成一道菜的能力：`(Int, Int) => Food`。部分施用的过程，好比是加工半成品：`Int => (Int => Food)`，这个半成品蕴含另一个能力——把若干数量的西红柿直接变成一道菜。
