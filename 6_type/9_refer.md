@@ -2,3 +2,4 @@
 * https://alvinalexander.com/scala/fp-book/algebraic-data-types-adts-in-scala
 * Category theory for programmers
 * https://www.youtube.com/watch?v=w1WMykh7AxA
+* https://softwareengineering.stackexchange.com/questions/347402/how-do-the-type-systems-in-functional-languages-differ-from-those-in-oo-language
