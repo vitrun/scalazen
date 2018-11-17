@@ -65,14 +65,30 @@ class AppleBox(orange: Apple) extends Box[Apple] {
 当`Fruit`作为方法入参时，应使用“逆变”或“不变”：
 ```scala
 class Box[-F <: Fruit] {
-  def contains(replacement: F): Boolean = ???
+  def contains(something: F): Boolean = ???
 }
 
 class FruitBox(fruit: Fruit) extends Box[Fruit]
 
 class AppleBox(orange: Apple) extends Box[Apple] {
-  override def contains(replacement: Apple): Boolean = ???
+  override def contains(something: Apple): Boolean = ???
 }
 ```
 理解上比较反直觉的地方在于，`Box`的`contains`方法接受的已经是最宽松的输入`F`了，不存在属于`Fruit`但又比`F`更宽松的类型。所以得“逆向”思考，把`AppleBox`视为`FruitBox`的父类。这样，子类的`contains`方法接受比父类更宽松的入参，就符合里氏原则了。
+
+问题来了，如果同时存在`get`和`contains`方法，即既要真协变，又要逆变，怎么办？下面例子的`Box`就是这种情况，却是类型安全的，没有引发编译器的报怨：
+```scala
+class Box[+F <: Fruit] {
+  def get: F = ???
+  def contains[T >: F](something: T): Boolean = ???
+}
+
+class FruitBox(fruit: Fruit) extends Box[Fruit]
+
+class AppleBox(apple: Apple) extends Box[Apple] {
+  override def get: Apple = apple
+  override def contains[Apple](something: Apple): Boolean = ???
+}
+```
+我们依然把`Box`声明为“协变”，同时在`contains`方法中引入新的类型标识`T >: F`，使用前文所述的边界，硬性要求`T`比`F`更宽泛，再把`T`作为入参，使得“逆变”要求也得到满足。
 
