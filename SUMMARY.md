@@ -17,9 +17,7 @@
     - [为什么需要类型](6_type/1_why_type.md)
     - [代数数据类型](6_type/2_adt.md)
     - [参数化类型](6_type/3_param_type.md)
-    - [存在类型](6_type/3_existential.md)
-    - Universals
-    - Higher-Kinded Types
+    - [类型的类型](6_type/4_higher_kinded_type.md)
 
 ##### Type classes
 - [Monoid](1_monoid/README.md)
