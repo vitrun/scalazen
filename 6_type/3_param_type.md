@@ -1,5 +1,7 @@
 ## 参数化类型
 
+> The purpose of abstraction is not to be vague, but to create a new semantic level in which one can be absolutely precise. ——Edsger Dijkstra
+
 Scala强大的类型系统拥有丰富的表现力。表现力体现在用更少的代码表达更多的含义，或者说，消灭重复代码。有很多操作是和类型无关的，比如，`def append(l: List[Int], e: 
 Int): List[Int]`、`def size(l: List[Int]): 
 Int`，不论`List`里放的是`Int`、`String`还是其它类型，`append`和`size`的操作都是一样的。那么，我们希望有与元素类型无关的通用的代码统一表达。类似于Java
