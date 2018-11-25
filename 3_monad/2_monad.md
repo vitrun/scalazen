@@ -9,7 +9,7 @@
 scala> trait Monad[F[_]] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B] = flatten(map(fa)(f))
   def flatten[A](ffa: F[F[A]]): F[A]
-  def unit[A](a: A): F[A]
+  def pure[A](a: A): F[A]
   def map[A, B](fa: F[A])(f: A => B): F[B]
 }
 defined trait Monad

@@ -4,15 +4,34 @@
 
 纯函数的世界固然美满，我们不能忘记现实世界的骨感：哪怕只是在屏幕打印一个像素，从磁盘或网络读取一个字节，都是不纯粹的操作，即都是有副作用的。
 
-不和外界打交道的“纯软件”是没有意义的。因此，我们要承认并接纳这种非纯粹性，并清楚地标识它，从而有效地把程序的纯粹部分和非纯粹部分隔离开。IO 
-Monad就是这道门，穿过它，便将混乱无序拋诸脑后，置身纯净整洁的新世界。
+不和外界打交道的“纯软件”是没有意义的。因此，我们要承认并接纳这种非纯粹性，并清楚地标识它，从而有效地把程序的纯粹部分和非纯粹部分隔离开。IO Monad就是这道门，穿过它，便将混乱无序拋诸脑后，置身纯净整洁的新世界。
 
-IO Monad是盛有输入输出操作结果的容器。如，从屏幕上读取字符串的结果是`String`，打印字符串的结果是`Unit`。为了清晰地表明这是有副作用的指令，我们用`IO[String
-]`和`IO[Unit]`额外包裹了结果。
+从定义上看，和普通Monad相比，IO Monad除了名字之外并没什么特别的。
+```scala
+class IO[A](codeBlock: => A) {
+  def run: A = codeBlock
+
+  def flatMap[B](fab: A => IO[B]): IO[B] = {
+    val result1: IO[B] = fab(codeBlock)
+    val result2: B = result1.run
+    IO(result2)
+  }
+
+  def map[B](f: A => B): IO[B] = flatMap(a => IO(f(a)))
+}
+
+object IO {
+
+  def pure[A](a: A): IO[A] = IO(a)
+
+  def apply[A](a: => A): IO[A] = new IO(a)
+}
+```
+顾名思义，IO Monad是盛有输入输出操作结果的容器。如，从屏幕上读取字符串的结果是`String`，打印字符串的结果是`Unit`。为了清晰地表明这是有副作用的指令，我们用`IO[String]`和`IO[Unit]`额外包裹了结果。
 
 ```scala
-  def readLine(): IO[String] = IO(scala.io.StdIn.readLine())
-  def writeLine(s: String): IO[Unit] = IO(println(s))
+def readLine(): IO[String] = IO(scala.io.StdIn.readLine())
+def writeLine(s: String): IO[Unit] = IO(println(s))
 ```
 
 IO Monad在使用形式上就这么简单，返回值类型再套上`IO`而已。它提醒调用者注意该函数在和外界交互，是带有副作用的。这样，纯函数式世界的一个好处得以保全：只看签名就能判断函数的纯粹性和语义。

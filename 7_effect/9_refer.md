@@ -1,0 +1,1 @@
+* http://jelv.is/blog/Haskell-Monads-and-Purity/
