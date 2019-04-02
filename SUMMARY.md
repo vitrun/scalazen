@@ -47,7 +47,7 @@
 ##### Effects
 - [Effect](7_effect/README.md)
     - [IO Monad](7_effect/1_io_monad.md)
-    - State
+    - [State Monad](7_effect/2_state_monad.md)
     - Reader
     - Combining Effects
 
