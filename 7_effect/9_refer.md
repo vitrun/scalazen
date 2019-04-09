@@ -6,3 +6,4 @@
 * http://patricknoir.blogspot.com/2014/12/demistify-state-monad-with-scala-22.html
 * https://earldouglas.com/posts/itof/var-to-state.html
 * http://rcardin.github.io/design/programming/fp/monad/2018/11/22/and-monads-for-all-state-monad.html
+* https://www.joekearney.co.uk/posts/learning-about-state-monad
