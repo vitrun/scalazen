@@ -48,7 +48,9 @@
 - [Effect](7_effect/README.md)
     - [IO Monad](7_effect/1_io_monad.md)
     - [State Monad](7_effect/2_state_monad.md)
-    - Reader
+    - [Reader Monad](7_effect/3_reader_monad.md)
+    - [Writer Monad](7_effect/4_writer_monad.md)
+    - [Monad Transformer](7_effect/5_monad_transformer.md)
     - Combining Effects
 
 ##### Architecture
