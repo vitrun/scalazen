@@ -20,14 +20,13 @@ Controller -> Service 1-> Service 2 -> Service 3
 `run`以`pi`为输入，输出体积值，所以其签名是`Double => Double`，这就要求`volumeR`输出一个包含`run`方法的对象，我们用`case class`来定义该对象的类型：
 ```scala
 case class Reader[E, A](run : E => A) {
-
 }
 ```
 那么，`area`和`volume`都应返回`Reader`，相应改造如下：
 ```scala
-  def areaR(r: Double): Reader[Double, Double] = Reader { pi => pi * r * r}
+def areaR(r: Double): Reader[Double, Double] = Reader { pi => pi * r * r}
 
-  def volumeR(r: Double, h: Double): Reader[Double, Double] = areaR(r).map(a => a * h)
+def volumeR(r: Double, h: Double): Reader[Double, Double] = areaR(r).map(a => a * h)
 ```
 好了，`pi`从`areaR`和`volumeR`的入参中消失，变成`run`的入参，只有真正调用`run`时才会用到。但这个代码还不能运行，因为缺少`map`的定义。`map`把底面积的计算和乘以高的计算组合起来，你大概猜到了，`Reader`是一个`Monad`，没错，到此，可以给出其完整定义了：
 
@@ -49,4 +48,15 @@ case class Reader[E, A](run: E => A) {
 ```
 scala> val res = volumeR(3, 2).run(3.14)
 res: Double = 56.519999999999996
+```
+敏锐的朋友很快就发现`volumeR`其实也没有直接用到参数`r`，只是将它传递给`areaR`而已。所以，我们可以继续上面的过程，把对`r`的依赖也延迟到最后，那么有：
+```scala
+def volumeRR(h: Double): Reader[Double, Reader[Double, Double]] = Reader{ r => 
+  areaR(r).map(a => a * h)
+}
+```
+注意`volumeRR`的返回类型`Reader[Double, Reader[Double, Double]]`，类型`Reader[Double, Double]`表示`Reader`包含了由`pi`计算得到体积的函数，我们在此基础上嵌套了一层，要由`r`得到这个包含此函数的`Reader`。相应地，使用时需要两次调用`run`：
+```
+scala> val area = volumeRR(2) run 3 run 3.14
+area: Double = 56.519999999999996
 ```
