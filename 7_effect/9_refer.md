@@ -8,3 +8,4 @@
 * http://rcardin.github.io/design/programming/fp/monad/2018/11/22/and-monads-for-all-state-monad.html
 * https://www.joekearney.co.uk/posts/learning-about-state-monad
 * https://earldouglas.com/posts/itof/di-to-reader.html
+* http://www.lispplusplus.com/2011/10/scala-writer-monad.html
