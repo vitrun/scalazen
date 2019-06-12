@@ -37,12 +37,19 @@
     - [开枝散叶](3_monad/3_tree_monad.md)
     - [云游太虚幻境](3_monad/4_identity.md)
     - [尺有所短寸有所长](3_monad/5_app_vs_monad.md)
+    - [Free Monad](3_monad/6_free_monad.md)
 - [Traverse](4_traverse/README.md)
     - [大丈夫能屈能伸](4_traverse/1_foldable.md)
     - [穿越火线](4_traverse/2_traverse.md)
     - [再次穿越火线](4_traverse/3_traverse_functor.md)
 
 ##### Data
+- [Optics](optics/README.md)
+    - [Lenses](optics/1_lenses.md)
+    - [Prism](optics/2_prism.md)
+    - [ISO](optics/3_iso.md)
+    - [Optional](optics/4_optional.md)
+    - [Composition of Optics](optics/5_optics_composition.md)
 
 ##### Effects
 - [Effect](7_effect/README.md)
@@ -51,9 +58,15 @@
     - [Reader Monad](7_effect/3_reader_monad.md)
     - [Writer Monad](7_effect/4_writer_monad.md)
     - [Monad Transformer](7_effect/5_monad_transformer.md)
-    - Combining Effects
+    - [Combining Effects](7_effect/6_combine_efects.md)
 
-##### Architecture
+##### Application
+- [From Imperative to Functional](i2f/RAEDMD.md)
+    - [Replace Mutator Method](i2f/mutator_method.md)
+    - [Replace Mutable Variable](i2f/mutable_var.md)
+    - [Replace Loop](i2f/loop_to_fold.md)
+    - [Exception Handling](i2f/exception_handle.md)
+
 - [architecture]()
     - Functional Domain Modeling
     - Onion Architecture
